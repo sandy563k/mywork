@@ -18,11 +18,11 @@ package com.week.array;
 	    /** pattern hash value **/    
 	    private long patHash;    
 	    /** pattern length **/
-	    private int M;  
+	    private int patlength;  
 	    /** Large prime **/         
-	    private long Q; 
+	    private long largePrime; 
 	    /** radix **/         
-	    private int R;   
+	    private int radix;   
 	    /** R^(M-1) % Q **/        
 	    private long RM;          
 	 
@@ -30,14 +30,14 @@ package com.week.array;
 	    public RabinKarp(String txt, String pat) 
 	    {
 	        this.pat = pat;      
-	        R = 256;
-	        M = pat.length();
-	        Q = longRandomPrime();
+	        radix = 256;
+	        patlength = pat.length();
+	        largePrime = longRandomPrime();
 	        /** precompute R^(M-1) % Q for use in removing leading digit **/
 	        RM = 1;
-	        for (int i = 1; i <= M-1; i++)
-	           RM = (R * RM) % Q;
-	        patHash = hash(pat, M);
+	        for (int i = 1; i <= patlength-1; i++)
+	           RM = (radix * RM) % largePrime;
+	        patHash = hash(pat, patlength);
 	        int pos = search(txt);
 	        if (pos == txt.length())
 	            System.out.println("\nNo Match\n");
@@ -49,13 +49,13 @@ package com.week.array;
 	    { 
 	        long h = 0; 
 	        for (int j = 0; j < M; j++) 
-	            h = (R * h + key.charAt(j)) % Q; 
+	            h = (radix * h + key.charAt(j)) % largePrime; 
 	        return h; 
 	    } 
 	    /** Funtion check **/
 	    private boolean check(String txt, int i) 
 	    {
-	        for (int j = 0; j < M; j++) 
+	        for (int j = 0; j < patlength; j++) 
 	            if (pat.charAt(j) != txt.charAt(i + j)) 
 	                return false; 
 	        return true;
@@ -64,19 +64,19 @@ package com.week.array;
 	    private int search(String txt) 
 	    {
 	        int N = txt.length(); 
-	        if (N < M) return N;
-	        long txtHash = hash(txt, M); 
+	        if (N < patlength) return N;
+	        long txtHash = hash(txt, patlength); 
 	        /** check for match at start **/
 	        if ((patHash == txtHash) && check(txt, 0))
 	            return 0;
 	        /** check for hash match. if hash match then check for exact match**/
-	        for (int i = M; i < N; i++) 
+	        for (int i = patlength; i < N; i++) 
 	        {
 	            // Remove leading digit, add trailing digit, check for match. 
-	            txtHash = (txtHash + Q - RM*txt.charAt(i - M) % Q) % Q; 
-	            txtHash = (txtHash * R + txt.charAt(i)) % Q; 
+	            txtHash = (txtHash + largePrime - RM*txt.charAt(i - patlength) % largePrime) % largePrime; 
+	            txtHash = (txtHash * radix + txt.charAt(i)) % largePrime; 
 	            // match
-	            int offset = i - M + 1;
+	            int offset = i - patlength + 1;
 	            if ((patHash == txtHash) && check(txt, offset))
 	                return offset;
 	        }
