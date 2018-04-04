@@ -1,12 +1,12 @@
 package com.week.trees;
 
-public class BinarySearchTree {
+ public class BinarySearchTreeNode {
 
-    class Node {
-        Node left, right;
+
+    BinarySearchTreeNode left, right;
         int data;
 
-        public Node(int value) {
+        public BinarySearchTreeNode(int value) {
             this.data = value;
         }
 
@@ -14,7 +14,7 @@ public class BinarySearchTree {
             if (value <= data) {
                 //insert on left side
                 if (left == null) {
-                    left = new Node(value);
+                    left = new BinarySearchTreeNode(value);
                 } else {
                     left.insert(value);
                 }
@@ -22,7 +22,7 @@ public class BinarySearchTree {
             } else {
                 //insert on right side
                 if (right == null) {
-                    right = new Node(value);
+                    right = new BinarySearchTreeNode(value);
                 } else {
                     right.insert(value);
                 }
@@ -59,6 +59,6 @@ public class BinarySearchTree {
     }
 
 
-}
+
 
 

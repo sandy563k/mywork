@@ -1,58 +1,70 @@
 package com.week.trees;
 
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
+
 public class BinaryTreeTraversal {
 
-    public void inOrderTreeTraversal(TreeNode node){
-        if(node!=null){
+    public static void inOrderTreeTraversal(BinarySearchTreeNode node) {
+        if (node != null) {
             inOrderTreeTraversal(node.left);
             visit(node);
             inOrderTreeTraversal(node.right);
         }
 
     }
-    public void PreOrderTreeTraversal(TreeNode node){
-        if(node!=null){
+
+    public static void PreOrderTreeTraversal(BinarySearchTreeNode node) {
+        if (node != null) {
             visit(node);
             PreOrderTreeTraversal(node.left);
             PreOrderTreeTraversal(node.right);
         }
 
     }
-    public void PostOrderTreeTraversal(TreeNode node){
-        if(node!=null){
+
+    public static void PostOrderTreeTraversal(BinarySearchTreeNode node) {
+        if (node != null) {
             PostOrderTreeTraversal(node.left);
             PostOrderTreeTraversal(node.right);
             visit(node);
         }
     }
 
-    private  class TreeNode{
+    private class TreeNode {
         int value;
         TreeNode left;
         TreeNode right;
 
-        TreeNode(int num){
-            value=num;
-            left=null;
-            right=null;
+        TreeNode(int num) {
+            value = num;
+            left = null;
+            right = null;
         }
 
     }
 
-    void visit(TreeNode node){
-       System.out.println(node.value);
+    public static void visit(BinarySearchTreeNode node) {
+        System.out.print(node.data +" ");
     }
 
     //create a tree to examine above cases
-    TreeNode createTree(){
-        TreeNode root=new TreeNode(0);
-        int i=0;
+    public static BinarySearchTreeNode createTree() {
+        BinarySearchTreeNode root = new BinarySearchTreeNode(10);
+        for (int i = 0; i < 20; i++) {
+            root.insert(ThreadLocalRandom.current().nextInt(0, 21));
+        }
         return root;
     }
 
-    public void main(String[] args){
-
-
+    public static void main(String[] args) {
+        BinarySearchTreeNode treeNode = createTree();
+        System.out.println("printing inorder traversal");
+        inOrderTreeTraversal(treeNode);
+        System.out.println("\n\nprinting Preorder traversal");
+        PreOrderTreeTraversal(treeNode);
+        System.out.println("\n\nprinting Postorder traversal");
+        PostOrderTreeTraversal(treeNode);
     }
 
 }
