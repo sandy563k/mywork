@@ -31,11 +31,19 @@ public class Deque<Item> implements Iterable<Item> {
     public void addFirst(Item item) {
         // add the item to the front
         if (item != null) {
-            Node oldFirst = first;
-            first = new Node(item);
-            first.next = oldFirst;
-            oldFirst.prev = first;
+
+            if(first==null){
+                first = new Node(item);
+                last=first;
+            }else {
+                Node oldFirst = first;
+                first = new Node(item);
+                first.next = oldFirst;
+                oldFirst.prev = first;
+            }
             size++;
+
+
         } else {
             throw new IllegalArgumentException();
         }
@@ -46,10 +54,18 @@ public class Deque<Item> implements Iterable<Item> {
     public void addLast(Item item) {
         // add the item to the end
         if (item != null) {
-            Node oldLast = last;
-            last = new Node(item);
-            oldLast.next = last;
-            last.prev = oldLast;
+
+            if(last == null){
+                last = new Node(item);
+                first=last;
+            }else {
+
+
+                Node oldLast = last;
+                last = new Node(item);
+                oldLast.next = last;
+                last.prev = oldLast;
+            }
             size++;
         } else {
             throw new IllegalArgumentException();
@@ -103,7 +119,7 @@ public class Deque<Item> implements Iterable<Item> {
 
         @Override
         public boolean hasNext() {
-            return current != null;
+            return current != null ;
         }
 
         @Override
@@ -126,6 +142,11 @@ public class Deque<Item> implements Iterable<Item> {
 
     public static void main(String[] args) {
         // unit testing (optional)
+        Deque deque = new Deque();
+        deque.addFirst("a");
+        deque.addFirst("b");
+        System.out.println(deque.removeLast());
+
     }
 
     private class Node {

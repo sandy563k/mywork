@@ -29,10 +29,18 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     public void enqueue(Item item) {
         // add the item
         if (item != null) {
-            Node oldFirst = first;
-            first = new Node(item);
-            first.next = oldFirst;
+            if (first == null) {
+                first = new Node(item);
+            } else {
+                Node oldFirst = first;
+                first = new Node(item);
+                first.next = oldFirst;
+                oldFirst.prev = first;
+
+            }
             size++;
+
+
         } else {
             throw new IllegalArgumentException();
         }
@@ -41,20 +49,41 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     public Item dequeue() {
         // remove and return a random item
 
+
         if (first != null) {
             int randomPosition = StdRandom.uniform(0, size);
-            Node current = first;
+           // randomPosition =1;
+             Node current = first;
+           // System.out.println("current:" + current + "current.next:" + current.next);
             int position = 0;
             while (position < randomPosition) {
+               // System.out.println("current :" + current);
                 current = current.next;
                 position++;
             }
 
-            Node prevNode = current.prev;
-            prevNode.next = current.next;
 
+            // iterate and check
+            Node itrr = first;
+            while(itrr!=null){
+                System.out.print("\t"+itrr.item);
+                itrr=itrr.next;
+            }
+            System.out.println();
+            System.out.println("random position:"+randomPosition);
+            //remove later
+
+
+            if (randomPosition == 0) {
+                first = first.next;
+            } else {
+                Node prevNode = current.prev;
+                Node nextNode = current.next;
+                prevNode.next = nextNode;
+                if(nextNode!=null)
+                nextNode.prev=prevNode;
+            }
             Item item = current.item;
-            current = null;
             size--;
             return item;
 
@@ -92,22 +121,89 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     private class RandomizedQueueIterator implements Iterator<Item> {
 
-        private Node current = first;
+        private Node currentHead;
+        private int itrSize;
+
+
+        RandomizedQueueIterator() {
+            if (first != null) {
+                currentHead = new Node(first.item);
+                Node originalListcurrent = first.next;
+                Node itrCurrent = currentHead;
+                while (originalListcurrent != null) {
+                    Node nNode = new Node(originalListcurrent.item);
+                    nNode.prev = itrCurrent;
+                    itrCurrent.next = nNode;
+                    itrCurrent = itrCurrent.next;
+                    //System.out.println("currenthead.next   :"+currentHead.next);
+                    originalListcurrent = originalListcurrent.next;
+
+                }
+                itrSize = size;
+
+                // iterate and check
+                Node itrr = currentHead;
+                while(itrr!=null){
+                  System.out.println("itrr:"+itrr.item);
+                  itrr=itrr.next;
+                }
+
+
+            } else {
+                currentHead = null;
+            }
+        }
 
         @Override
         public boolean hasNext() {
-            return false;
+            return currentHead != null;
         }
 
         @Override
         public Item next() {
-            if (size != 0) {
+            if (currentHead != null) {
+
+
+                int randomPosition = StdRandom.uniform(0, itrSize);
+                //System.out.println("randomPosition:"+randomPosition +" itrSize:"+itrSize);
+                Node current = currentHead;
+                //System.out.println("currentHead :"+currentHead+" currenthead.next:"+currentHead.next);
+                int position = 0;
+                while (position < randomPosition) {
+                    //  System.out.println("position:"+position+" current:"+current);
+                    current = current.next;
+                    position++;
+                }
+
+                if (randomPosition == 0) {
+                    currentHead = currentHead.next;
+                } else {
+                    Node prevNode = current.prev;
+                    Node nextNode = current.next;
+                    prevNode.next = nextNode;
+                    if(nextNode!=null)
+                        nextNode.prev=prevNode;
+                }
+
+                Item item = current.item;
+                current=null;
+                System.out.println("removed item:"+item);
+                System.out.println("remaining list");
+                itrSize--;
+                // iterate and check
+                Node itrr = currentHead;
+                while(itrr!=null){
+                    System.out.print("\t"+itrr.item);
+                    itrr=itrr.next;
+                }
+                System.out.println();
+                return item;
+
 
             } else {
                 throw new NoSuchElementException();
             }
 
-            return null;
 
         }
 
